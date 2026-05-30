@@ -77,7 +77,7 @@ jobs:
           CODE_SIGNING_ALLOWED=NO || echo "⚠️ No tests found or tests failed"
 
     - name: Create IPA (Ad-Hoc without signing)
-      if: steps.check_project.outputs.exists == 'true' && github.event_name == 'push'
+      if: steps.check_project.outputs.exists == 'true'
       run: |
         # Create build directory
         mkdir -p ./build
@@ -114,7 +114,7 @@ jobs:
         fi
 
     - name: Create additional build info
-      if: steps.check_project.outputs.exists == 'true' && github.event_name == 'push'
+      if: steps.check_project.outputs.exists == 'true'
       run: |
         cat > ./build/BUILD_INFO.txt << EOF
         Plant Tycoon - Build Information
@@ -144,7 +144,7 @@ jobs:
         fi
 
     - name: Upload IPA artifact
-      if: steps.check_project.outputs.exists == 'true' && github.event_name == 'push'
+      if: steps.check_project.outputs.exists == 'true'
       uses: actions/upload-artifact@v4
       continue-on-error: true
       with:
