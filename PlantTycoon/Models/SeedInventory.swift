@@ -83,4 +83,14 @@ struct SeedInventory: Codable {
     enum CodingKeys: String, CodingKey {
         case seedsStorage
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        seedsStorage = try container.decode([String: [String: Int]].self, forKey: .seedsStorage)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(seedsStorage, forKey: .seedsStorage)
+    }
 }
