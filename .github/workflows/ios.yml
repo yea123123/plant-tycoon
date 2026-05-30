@@ -53,6 +53,18 @@ jobs:
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO
 
+    - name: Build for iOS Device (Generic)
+      if: steps.check_project.outputs.exists == 'true'
+      run: |
+        xcodebuild -scheme PlantTycoon \
+          -destination 'generic/platform=iOS' \
+          -configuration Release \
+          clean build \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          DEVELOPMENT_TEAM="" || echo "⚠️ Device build failed (expected without signing)"
+
     - name: Run tests
       if: steps.check_project.outputs.exists == 'true'
       continue-on-error: true
@@ -64,49 +76,82 @@ jobs:
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO || echo "⚠️ No tests found or tests failed"
 
-    - name: Archive for iOS Device (IPA)
+    - name: Create IPA (Ad-Hoc without signing)
       if: steps.check_project.outputs.exists == 'true' && github.event_name == 'push'
       run: |
-        xcodebuild archive \
-          -scheme PlantTycoon \
-          -archivePath ./build/PlantTycoon.xcarchive \
+        # Create build directory
+        mkdir -p ./build
+
+        # Build for simulator and create app bundle
+        xcodebuild -scheme PlantTycoon \
+          -destination 'generic/platform=iOS Simulator' \
           -configuration Release \
+          -derivedDataPath ./DerivedData \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGNING_ALLOWED=NO || echo "⚠️ Archive failed - signing required for device builds"
+          CODE_SIGNING_ALLOWED=NO \
+          build || echo "⚠️ Simulator build for IPA failed"
 
-    - name: Export IPA
+        # Find the .app bundle
+        APP_PATH=$(find ./DerivedData -name "PlantTycoon.app" | head -1)
+
+        if [ -n "$APP_PATH" ]; then
+          echo "✅ Found app at: $APP_PATH"
+
+          # Create Payload directory
+          mkdir -p ./build/Payload
+          cp -r "$APP_PATH" ./build/Payload/
+
+          # Create IPA
+          cd ./build
+          zip -r PlantTycoon-Simulator.ipa Payload
+          cd ..
+
+          echo "✅ IPA created: ./build/PlantTycoon-Simulator.ipa"
+          ls -lh ./build/*.ipa
+        else
+          echo "⚠️ App bundle not found"
+        fi
+
+    - name: Create additional build info
       if: steps.check_project.outputs.exists == 'true' && github.event_name == 'push'
-      continue-on-error: true
       run: |
-        # Create export options
-        cat > ExportOptions.plist << EOF
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0">
-        <dict>
-            <key>method</key>
-            <string>development</string>
-            <key>teamID</key>
-            <string></string>
-            <key>signingStyle</key>
-            <string>automatic</string>
-        </dict>
-        </plist>
+        cat > ./build/BUILD_INFO.txt << EOF
+        Plant Tycoon - Build Information
+        ================================
+
+        Build Date: $(date)
+        Commit: ${{ github.sha }}
+        Branch: ${{ github.ref_name }}
+
+        Files:
+        - PlantTycoon-Simulator.ipa (iOS Simulator build)
+
+        Note: This is an unsigned simulator build.
+        For device installation, you need:
+        1. Apple Developer account
+        2. Signing certificates
+        3. Provisioning profile
+
+        To install on simulator:
+        1. Unzip the IPA
+        2. Drag Payload/PlantTycoon.app to simulator
+
         EOF
 
-        xcodebuild -exportArchive \
-          -archivePath ./build/PlantTycoon.xcarchive \
-          -exportPath ./build \
-          -exportOptionsPlist ExportOptions.plist || echo "⚠️ Export failed - code signing required"
+        if [ -f ./build/PlantTycoon-Simulator.ipa ]; then
+          echo "✅ IPA file created successfully"
+        fi
 
     - name: Upload IPA artifact
       if: steps.check_project.outputs.exists == 'true' && github.event_name == 'push'
       uses: actions/upload-artifact@v4
       continue-on-error: true
       with:
-        name: PlantTycoon-IPA
-        path: ./build/*.ipa
+        name: PlantTycoon-Build
+        path: |
+          ./build/*.ipa
+          ./build/BUILD_INFO.txt
         retention-days: 30
 
     - name: Upload build logs
