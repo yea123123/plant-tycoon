@@ -14,16 +14,44 @@ struct PlantSelectorView: View {
 
     var body: some View {
         NavigationView {
-            ZStack {
-                // Gradient background
-                LinearGradient(
-                    colors: [Color(hex: "0f2027"), Color(hex: "203a43"), Color(hex: "2c5364")],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+            mainContent
+        }
+        .preferredColorScheme(.dark)
+    }
 
-                ScrollView {
+    private var mainContent: some View {
+        ZStack {
+            backgroundGradient
+
+            ScrollView {
+                contentView
+            }
+        }
+        .navigationTitle("Plant Seed")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(.white.opacity(0.6))
+                }
+            }
+        }
+        .toolbarBackground(Color.black.opacity(0.3), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+    }
+
+    private var backgroundGradient: some View {
+        LinearGradient(
+            colors: [Color(hex: "0f2027"), Color(hex: "203a43"), Color(hex: "2c5364")],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+    }
+
+    private var contentView: some View {
                     VStack(spacing: 20) {
                         // Header info
                         VStack(spacing: 8) {
@@ -171,21 +199,7 @@ struct PlantSelectorView: View {
                     .padding(.bottom, 20)
                 }
             }
-            .navigationTitle("Plant Seed")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white.opacity(0.6))
-                    }
-                }
-            }
-            .toolbarBackground(Color.black.opacity(0.3), for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
         }
-        .preferredColorScheme(.dark)
     }
 
     private func rarityColor(_ rarity: PlantRarity) -> Color {
