@@ -17,128 +17,246 @@ struct StatsView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Player stats
+                // Player stats card
                 VStack(spacing: 16) {
-                    Text("Player Stats")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-
-                    StatRow(label: "Level", value: "\(gameModel.playerLevel)")
-                    StatRow(label: "Total Sales", value: "💰\(gameModel.totalSales)")
-                    StatRow(label: "Current Coins", value: "💰\(gameModel.coins)")
-                    StatRow(label: "Total Plants", value: "\(totalPlants())")
-                    StatRow(label: "Total Seeds", value: "\(gameModel.seedInventory.totalSeeds())")
-                }
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(12)
-
-                // Market trend
-                VStack(spacing: 16) {
-                    Text("Market Trend")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-
                     HStack {
+                        Image(systemName: "person.crop.circle.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing))
+
+                        Text("Player Stats")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+
+                        Spacer()
+                    }
+
+                    VStack(spacing: 12) {
+                        ModernStatRow(icon: "star.fill", label: "Level", value: "\(gameModel.playerLevel)", color: Color(hex: "f093fb"))
+                        ModernStatRow(icon: "chart.line.uptrend.xyaxis", label: "Total Sales", value: "$\(gameModel.totalSales)", color: Color(hex: "00f260"))
+                        ModernStatRow(icon: "dollarsign.circle.fill", label: "Current Coins", value: "$\(gameModel.coins)", color: Color(hex: "feca57"))
+                        ModernStatRow(icon: "leaf.fill", label: "Total Plants", value: "\(totalPlants())", color: Color(hex: "4facfe"))
+                        ModernStatRow(icon: "bag.fill", label: "Total Seeds", value: "\(gameModel.seedInventory.totalSeeds())", color: Color(hex: "fa709a"))
+                    }
+                }
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(Color.white.opacity(0.08))
+                        .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 6)
+                )
+
+                // Market trend card
+                VStack(spacing: 16) {
+                    HStack {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(LinearGradient(colors: [Color(hex: "f093fb"), Color(hex: "f5576c")], startPoint: .topLeading, endPoint: .bottomTrailing))
+
+                        Text("Market Trend")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+
+                        Spacer()
+                    }
+
+                    HStack(spacing: 16) {
+                        // Trending plant
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Trending Plant")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                            HStack {
+                            Text("Trending Now")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.6))
+
+                            HStack(spacing: 8) {
                                 Text(plantEmoji(gameModel.marketTrend.trendingPlant))
-                                    .font(.title)
-                                Text(gameModel.marketTrend.trendingPlant.rawValue)
-                                    .font(.headline)
+                                    .font(.system(size: 40))
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(gameModel.marketTrend.trendingPlant.rawValue)
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(.white)
+
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "arrow.up.circle.fill")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(Color(hex: "00f260"))
+                                        Text("+50% price")
+                                            .font(.system(size: 12, weight: .semibold))
+                                            .foregroundColor(Color(hex: "00f260"))
+                                    }
+                                }
                             }
-                            Text("+50% sell price")
-                                .font(.caption)
-                                .foregroundColor(.green)
                         }
 
                         Spacer()
 
-                        VStack(alignment: .trailing, spacing: 4) {
-                            Text("Time left")
-                                .font(.caption)
-                                .foregroundColor(.gray)
+                        // Time remaining
+                        VStack(spacing: 6) {
+                            Image(systemName: "clock.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(Color(hex: "feca57"))
+
                             Text(timeRemaining())
-                                .font(.headline)
-                                .foregroundColor(.orange)
+                                .font(.system(size: 18, weight: .bold, design: .rounded))
+                                .foregroundColor(Color(hex: "feca57"))
+
+                            Text("remaining")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundColor(.white.opacity(0.6))
                         }
+                        .padding(12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(hex: "feca57").opacity(0.15))
+                        )
                     }
                 }
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(12)
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(Color.white.opacity(0.08))
+                        .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 6)
+                )
 
-                // Employees
+                // Employees card
                 if !gameModel.employees.isEmpty {
                     VStack(spacing: 16) {
-                        Text("Employees")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.green)
+                        HStack {
+                            Image(systemName: "person.2.fill")
+                                .font(.system(size: 24))
+                                .foregroundStyle(LinearGradient(colors: [Color(hex: "4facfe"), Color(hex: "00f2fe")], startPoint: .topLeading, endPoint: .bottomTrailing))
 
-                        ForEach(gameModel.employees) { employee in
-                            HStack {
-                                Text(employee.type.emoji)
-                                    .font(.title2)
-                                Text(employee.type.rawValue)
-                                    .font(.subheadline)
-                                Spacer()
-                                Text("✓ Active")
-                                    .font(.caption)
-                                    .foregroundColor(.green)
+                            Text("Your Team")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.white)
+
+                            Spacer()
+                        }
+
+                        VStack(spacing: 12) {
+                            ForEach(gameModel.employees) { employee in
+                                HStack(spacing: 12) {
+                                    Text(employee.type.emoji)
+                                        .font(.system(size: 32))
+                                        .frame(width: 50, height: 50)
+                                        .background(
+                                            Circle()
+                                                .fill(Color.white.opacity(0.1))
+                                        )
+
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(employee.type.rawValue)
+                                            .font(.system(size: 15, weight: .bold))
+                                            .foregroundColor(.white)
+
+                                        Text(employee.type.description)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .foregroundColor(.white.opacity(0.6))
+                                    }
+
+                                    Spacer()
+
+                                    HStack(spacing: 4) {
+                                        Circle()
+                                            .fill(Color(hex: "00f260"))
+                                            .frame(width: 8, height: 8)
+
+                                        Text("Active")
+                                            .font(.system(size: 12, weight: .semibold))
+                                            .foregroundColor(Color(hex: "00f260"))
+                                    }
+                                }
+                                .padding(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color.white.opacity(0.05))
+                                )
                             }
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(8)
                         }
                     }
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(12)
+                    .padding(20)
+                    .background(
+                        RoundedRectangle(cornerRadius: 24)
+                            .fill(Color.white.opacity(0.08))
+                            .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 6)
+                    )
                 }
 
-                // Save management
+                // Save management card
                 VStack(spacing: 16) {
-                    Text("Save Management")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
+                    HStack {
+                        Image(systemName: "externaldrive.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(LinearGradient(colors: [Color(hex: "a8edea"), Color(hex: "fed6e3")], startPoint: .topLeading, endPoint: .bottomTrailing))
 
-                    Button(action: {
-                        exportedSave = gameModel.exportSave()
-                        showExportAlert = true
-                    }) {
-                        HStack {
-                            Text("📤")
-                            Text("Export Save")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue.opacity(0.3))
-                        .cornerRadius(8)
+                        Text("Save Management")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+
+                        Spacer()
                     }
 
-                    Button(action: {
-                        showImportAlert = true
-                    }) {
-                        HStack {
-                            Text("📥")
-                            Text("Import Save")
+                    VStack(spacing: 12) {
+                        Button(action: {
+                            exportedSave = gameModel.exportSave()
+                            showExportAlert = true
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "square.and.arrow.up.fill")
+                                    .font(.system(size: 18))
+
+                                Text("Export Save")
+                                    .font(.system(size: 16, weight: .semibold))
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.white.opacity(0.5))
+                            }
+                            .foregroundColor(.white)
+                            .padding(16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(LinearGradient(colors: [Color(hex: "4facfe"), Color(hex: "00f2fe")], startPoint: .leading, endPoint: .trailing))
+                                    .shadow(color: Color(hex: "00f2fe").opacity(0.3), radius: 8, x: 0, y: 4)
+                            )
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.purple.opacity(0.3))
-                        .cornerRadius(8)
+                        .buttonStyle(ScaleButtonStyle())
+
+                        Button(action: {
+                            showImportAlert = true
+                        }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "square.and.arrow.down.fill")
+                                    .font(.system(size: 18))
+
+                                Text("Import Save")
+                                    .font(.system(size: 16, weight: .semibold))
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.white.opacity(0.5))
+                            }
+                            .foregroundColor(.white)
+                            .padding(16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(LinearGradient(colors: [Color(hex: "f093fb"), Color(hex: "f5576c")], startPoint: .leading, endPoint: .trailing))
+                                    .shadow(color: Color(hex: "f5576c").opacity(0.3), radius: 8, x: 0, y: 4)
+                            )
+                        }
+                        .buttonStyle(ScaleButtonStyle())
                     }
                 }
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(12)
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(Color.white.opacity(0.08))
+                        .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 6)
+                )
             }
             .padding()
         }
@@ -193,20 +311,37 @@ struct StatsView: View {
     }
 }
 
-struct StatRow: View {
+struct ModernStatRow: View {
+    let icon: String
     let label: String
     let value: String
+    let color: Color
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(color)
+                .frame(width: 36, height: 36)
+                .background(
+                    Circle()
+                        .fill(color.opacity(0.15))
+                )
+
             Text(label)
-                .font(.subheadline)
-                .foregroundColor(.gray)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(.white.opacity(0.8))
+
             Spacer()
+
             Text(value)
-                .font(.subheadline)
-                .fontWeight(.semibold)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.white.opacity(0.05))
+        )
     }
 }
