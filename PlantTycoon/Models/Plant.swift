@@ -71,11 +71,11 @@ struct Plant: Identifiable, Codable {
 
     var sellPrice: Int {
         let baseValue = Double(basePrice) * rarity.sellMultiplier
-        let growthBonus = growthStage
-        let beautyBonus = beauty / 100.0
-        let healthBonus = health / 100.0
+        let growthBonus = max(0.1, growthStage) // Minimum 10% value
+        let beautyBonus = max(0.1, beauty / 100.0)
+        let healthBonus = max(0.1, health / 100.0)
 
-        return Int(baseValue * growthBonus * beautyBonus * healthBonus)
+        return max(1, Int(baseValue * growthBonus * beautyBonus * healthBonus))
     }
 
     var canWater: Bool {

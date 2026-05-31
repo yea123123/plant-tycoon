@@ -47,7 +47,7 @@ struct MarketTrend: Codable {
         if plantType == trendingPlant {
             return 1.5 // +50% bonus
         } else {
-            return 0.8 // -20% penalty
+            return 1.0 // Normal price
         }
     }
 
