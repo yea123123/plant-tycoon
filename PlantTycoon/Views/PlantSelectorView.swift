@@ -200,7 +200,6 @@ struct PlantSelectorView: View {
                 }
             }
         }
-    }
 
     private func rarityColor(_ rarity: PlantRarity) -> Color {
         switch rarity {
