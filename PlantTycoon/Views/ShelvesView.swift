@@ -13,6 +13,9 @@ struct ShelvesView: View {
     @State private var showPlantSelector = false
 
     var body: some View {
+        // Ensure selectedShelfIndex is valid
+        let validShelfIndex = min(selectedShelfIndex, max(0, gameModel.shelves.count - 1))
+
         VStack(spacing: 16) {
             // Shelf selector
             if gameModel.shelves.count > 1 {
@@ -44,12 +47,12 @@ struct ShelvesView: View {
             // Plants grid
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                    ForEach(Array(gameModel.shelves[selectedShelfIndex].plants.enumerated()), id: \.element.id) { index, plant in
-                        PlantCardView(plant: plant, shelfIndex: selectedShelfIndex, plantIndex: index)
+                    ForEach(Array(gameModel.shelves[validShelfIndex].plants.enumerated()), id: \.element.id) { index, plant in
+                        PlantCardView(plant: plant, shelfIndex: validShelfIndex, plantIndex: index)
                     }
 
                     // Add plant button
-                    if gameModel.shelves[selectedShelfIndex].hasSpace {
+                    if gameModel.shelves[validShelfIndex].hasSpace {
                         Button(action: {
                             showPlantSelector = true
                         }) {
@@ -75,8 +78,14 @@ struct ShelvesView: View {
             }
         }
         .sheet(isPresented: $showPlantSelector) {
-            PlantSelectorView(shelfIndex: selectedShelfIndex)
+            PlantSelectorView(shelfIndex: validShelfIndex)
                 .environmentObject(gameModel)
+        }
+        .onChange(of: gameModel.shelves.count) { newCount in
+            // Reset selectedShelfIndex if it's out of bounds
+            if selectedShelfIndex >= newCount {
+                selectedShelfIndex = max(0, newCount - 1)
+            }
         }
     }
 }
