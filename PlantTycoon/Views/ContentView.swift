@@ -18,6 +18,19 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .shelves
 
     var body: some View {
+        // Ensure shelves exist before rendering
+        if gameModel.shelves.isEmpty {
+            ZStack {
+                Color.black.ignoresSafeArea()
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .green))
+            }
+        } else {
+            mainContent
+        }
+    }
+
+    private var mainContent: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 

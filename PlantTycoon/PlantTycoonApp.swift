@@ -16,7 +16,8 @@ struct PlantTycoonApp: App {
             ContentView()
                 .environmentObject(gameModel)
                 .preferredColorScheme(.dark)
-                .onAppear {
+                .task {
+                    // Load game after view appears
                     gameModel.loadGame()
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in

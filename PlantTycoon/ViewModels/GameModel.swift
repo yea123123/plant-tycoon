@@ -32,8 +32,10 @@ class GameModel: ObservableObject {
             Location(type: .delivery, unlocked: false)
         ]
 
-        // Start update timer
-        startUpdateTimer()
+        // Start update timer after a delay to ensure everything is initialized
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.startUpdateTimer()
+        }
     }
 
     func startUpdateTimer() {
@@ -46,6 +48,13 @@ class GameModel: ObservableObject {
     func updateGame() {
         let now = Date()
         let deltaTime = now.timeIntervalSince(lastUpdateDate)
+
+        // Prevent negative or excessive delta times
+        guard deltaTime > 0 && deltaTime < 3600 else {
+            lastUpdateDate = now
+            return
+        }
+
         lastUpdateDate = now
 
         // Update all plants
