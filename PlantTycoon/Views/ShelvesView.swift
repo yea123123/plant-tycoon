@@ -44,8 +44,8 @@ struct ShelvesView: View {
                                 .background(
                                     RoundedRectangle(cornerRadius: 16)
                                         .fill(selectedShelfIndex == index ?
-                                              LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .leading, endPoint: .trailing) :
-                                              LinearGradient(colors: [Color.white.opacity(0.1), Color.white.opacity(0.05)], startPoint: .leading, endPoint: .trailing))
+                                              AnyShapeStyle(LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .leading, endPoint: .trailing)) :
+                                              AnyShapeStyle(LinearGradient(colors: [Color.white.opacity(0.1), Color.white.opacity(0.05)], startPoint: .leading, endPoint: .trailing)))
                                         .shadow(color: selectedShelfIndex == index ? Color(hex: "00f260").opacity(0.3) : .clear, radius: 8, x: 0, y: 4)
                                 )
                                 .foregroundColor(.white)

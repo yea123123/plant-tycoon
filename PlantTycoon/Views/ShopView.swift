@@ -49,8 +49,8 @@ struct ShopView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 16)
                                     .fill(selectedCategory == category ?
-                                          LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .leading, endPoint: .trailing) :
-                                          Color.white.opacity(0.1))
+                                          AnyShapeStyle(LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .leading, endPoint: .trailing)) :
+                                          AnyShapeStyle(Color.white.opacity(0.1)))
                                     .shadow(color: selectedCategory == category ? Color(hex: "00f260").opacity(0.3) : .clear, radius: 8, x: 0, y: 4)
                             )
                         }
@@ -151,8 +151,8 @@ struct ModernSeedsShopView: View {
                                         .background(
                                             Circle()
                                                 .fill(canAfford ?
-                                                      LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing) :
-                                                      LinearGradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                                      AnyShapeStyle(LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing)) :
+                                                      AnyShapeStyle(LinearGradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing)))
                                                 .shadow(color: canAfford ? Color(hex: "00f260").opacity(0.3) : .clear, radius: 6, x: 0, y: 3)
                                         )
                                 }
@@ -268,8 +268,8 @@ struct ModernEmployeesShopView: View {
                                 .background(
                                     Circle()
                                         .fill(canAfford ?
-                                              LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing) :
-                                              LinearGradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                              AnyShapeStyle(LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing)) :
+                                              AnyShapeStyle(LinearGradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing)))
                                         .shadow(color: canAfford ? Color(hex: "00f260").opacity(0.3) : .clear, radius: 6, x: 0, y: 3)
                                 )
                         }
@@ -362,8 +362,8 @@ struct ModernLocationsShopView: View {
                                 .background(
                                     Circle()
                                         .fill(canAfford ?
-                                              LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing) :
-                                              LinearGradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                              AnyShapeStyle(LinearGradient(colors: [Color(hex: "00f260"), Color(hex: "0575e6")], startPoint: .topLeading, endPoint: .bottomTrailing)) :
+                                              AnyShapeStyle(LinearGradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing)))
                                         .shadow(color: canAfford ? Color(hex: "00f260").opacity(0.3) : .clear, radius: 6, x: 0, y: 3)
                                 )
                         }
