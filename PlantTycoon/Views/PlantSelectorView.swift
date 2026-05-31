@@ -199,7 +199,6 @@ struct PlantSelectorView: View {
                     .padding(.bottom, 20)
                 }
             }
-        }
 
     private func rarityColor(_ rarity: PlantRarity) -> Color {
         switch rarity {
